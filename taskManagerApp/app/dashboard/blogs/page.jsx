@@ -1,192 +1,147 @@
 "use client";
-import dynamic from "next/dynamic";
-const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
+import React, { useState, useRef } from 'react';
+import Modal from './Modal';
+import styles from './blog.module.css';
+import QuillEditor from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import FeaturedPost from './featuredPost';
 
-import { generateSlug } from "./generateSlug";
-import { Plus } from "lucide-react";
-import React, { useState } from "react";
-import "react-quill/dist/quill.snow.css";
-import parse from "html-react-parser";
-import styles from "./blog.module.css";
 
-export default function Blogpage() {
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [description, setDescription] = useState("");
-  const [content, setContent] = useState("");
-  function handleTitle(e) {
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-    const autoSlug = generateSlug(newTitle);
-    setSlug(autoSlug);
-  }
-  async function handleSubmit(e) {
+const Blogpage = () => {
+  const postsRef = useRef([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const blogIdRef = useRef(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [blogs, setBlogs] = useState([]);
+
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleDescriptionChange = (e) => setDescription(e.target.value);
+  const handleImageChange = (e) => setImage(e.target.files[0]);
+
+  /*const scrollToPost = (id) => {
+    const postElement = postsRef.current[id];
+    if (postElement) {
+      postElement.scrollIntoView({ behavior: 'smooth', block: 'start'});
+    }
+  }; */
+
+  const confirmDelete = (blogId) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this blog post?");
+    if (isConfirmed) {
+      setBlogs(blogs.filter(blog => blog.id !== blogId));
+    }
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newBlog = {
-      title,
-      slug,
-      description,
-      content,
-    };
-    console.log(newBlog);
-  }
+    if (!title || !description || !image) {
+      alert("Please fill out all fields and upload an image before submitting.");
+      return;
+    }
 
-  //Custom Tool Bar
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      [{ align: [] }],
-      [{ color: [] }],
-      ["code-block"],
-      ["clean"],
-    ],
+    if (isEditing) {
+      setBlogs(blogs.map(blog => blog.id === editingPostId ? { ...blog, title, description, image } : blog));
+      setIsEditing(false);
+      setEditingPostId(null);
+    } else {
+      const newBlog = { id: blogIdRef.current++, title, description, image};
+      setBlogs([newBlog, ...blogs]);
+    }
+ 
+    setTitle('');
+    setDescription('');
+    setImage(null);
+    setIsModalOpen(false);
   };
 
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "link",
-    "image",
-    "align",
-    "color",
-    "code-block",
-  ];
-
-  const handleEditorChange = (newContent) => {
-    setContent(newContent);
+  const startEdit = (postId) => {
+    const postToEdit = blogs.find(blog => blog.id === postId);
+    if (postToEdit) {
+      setTitle(postToEdit.title);
+      setDescription(postToEdit.description);
+      setImage(postToEdit.image); 
+      setIsEditing(true);
+      setEditingPostId(postId);
+      setIsModalOpen(true); 
+    }
   };
+  
+
+
+
   return (
-    <div className={styles.container}>
-      <h2 className={styles.heading}>Write your story</h2>
-      <div className={styles.blogframe}>
-        {/* Blog Editor */}
-        <div className={styles.blogeditor__container}>
-          <h2 className={styles.blogh2}>Blog Editor</h2>
-          <form onSubmit={handleSubmit}>
-            <div className={styles.formcontainer}>
-              {/* Title */}
-              <div className={styles.blogtitlecontainer}>
-                <label htmlFor="title" className={styles.bloglabel}>
-                  Blog Title
-                </label>
-                <div className={styles.bloginput}>
-                  <input
-                    onChange={handleTitle}
-                    type="text"
-                    value={title}
-                    name="title"
-                    id="title"
-                    autoComplete="given-name"
-                    className={styles.inputtitle}
-                    placeholder="Type the Blog title"
-                  />
-                </div>
-              </div>
-              {/* Slug */}
-              <div className={styles.blogtitlecontainer}>
-                <label htmlFor="slug" className={styles.bloglabel}>
-                  Blog Slug
-                </label>
-                <div className={styles.bloginput}>
-                  <input
-                    onChange={(e) => setSlug(e.target.value)}
-                    type="text"
-                    value={slug}
-                    name="slug"
-                    id="slug"
-                    autoComplete="slug"
-                    className={styles.sluginput}
-                    placeholder="Type the Blog title"
-                  />
-                </div>
-              </div>
-              {/* Description */}
-              <div className={styles.bdes}>
-                <label htmlFor="description" className={styles.bloglabel}>
-                  Blog Description
-                </label>
-                <textarea
-                  id="description"
-                  rows="4"
-                  onChange={(e) => setDescription(e.target.value)}
-                  value={description}
-                  className={styles.descriptioncontent}
-                  placeholder="Write your thoughts here..."
-                ></textarea>
-              </div>
-              {/* Content */}
-              <div className={styles.content}>
-                <label htmlFor="content" className={styles.bloglabel}>
-                  Blog Content
-                </label>
-                <div className={styles.quill}>
-                  <QuillEditor
-                    id="content"
-                    theme="snow"
-                    value={content}
-                    onChange={handleEditorChange}
-                    modules={quillModules}
-                    formats={quillFormats}
-                    style={{
-                      backgroundColor: "#ffffff",
-                      borderColor:
-                        "#e7f2ff" ,
-                      height: "250px",
-                      width: "100%",
-                      overflow: "auto",
-                      marginBottom: "20px",
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-            <button type="submit" className={styles.btn}>
-              <Plus className={styles.plus} />
-              <span>Create Blog Post</span>
-            </button>
-          </form>
-        </div>
+    <div className={styles.blogPageContainer}>
+      <button onClick={() => setIsModalOpen(true)} className={styles.addBlogButton}>
+        + Add Blog
+      </button>
+      <input
+      type="text"
+      placeholder="Search posts..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className={styles.searchInput}
+      />
 
-        {/* Blog View */}
-        <div className={styles.view__container}>
-          <h2 className={styles.blogh2}>Blog Pre-view</h2>
-          <hr className={styles.break} />
-          <div className={styles.views}>
-            {/* Title */}
-            <div className={styles.viewsmobile}>
-              <h2 className={styles.viewh2}>Blog Title</h2>
-              <div className={styles.viewbtitlecontent}>
-                <p className={styles.viewbtitlecontent_t}>{title}</p>
+    
+     
+
+      <div className={styles.container}>
+        {blogs.length > 0 && (
+          <FeaturedPost
+            title={blogs[0].title}
+            imageUrl={blogs[0].image ? URL.createObjectURL(blogs[0].image) : null}
+            //onFeaturedPostClick={() => scrollToPost(blogs[0].id)} // Assuming each blog has a unique identifier
+          />
+        )}
+
+      <div className={styles.previousStories}>
+          <h2> Previous Stories </h2>
+          {blogs.filter(blog =>
+          blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          blog.description.toLowerCase().includes(searchQuery.toLowerCase())
+          ).map((blog, index) => (
+            <div key={blog.id} ref={el => postsRef.current[blog.id] = el} className={styles.blogPost}>
+              <h3> {blog.title} </h3>
+              <div className={styles.blogContent}> {/* Flex container */} 
+              {blog.image && <img src={URL.createObjectURL(blog.image)} alt='Blog Post' className={styles.blogPostImage} />}
+              <p>{blog.description}</p>
+              </div>
+              <div className={styles.blogPostActions}>
+              <button onClick={() => startEdit(blog.id)} className={styles.editButton}>Edit</button>
+              <button onClick={() => confirmDelete(blog.id)} className={styles.deleteButton}>Delete</button>
+
               </div>
             </div>
-            {/* Slug */}
-            <div className={styles.slug}>
-              <h2 className={styles.viewh2}>Blog Slug</h2>
-              <div className={styles.viewbslugcontent}>
-                <p>{slug}</p>
-              </div>
-            </div>
-            {/* Description */}
-            <div className={styles.viewdes}>
-              <h2 className={styles.viewh2}>Blog Description</h2>
-              <p className={styles.viewdescontent}>{description}</p>
-            </div>
-            <div className={styles.viewcontent}>
-              <h2 className={styles.viewh2}>Blog Content</h2>
-              <div className={styles.viewbcontent}>{parse(content)}</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <form onSubmit={handleSubmit} className={styles.blogForm}>
+          <div className={styles.formRow}>
+            <div className={styles.titleField}>
+              <label htmlFor="title">Title</label>
+              <input id="title" className={styles.inputField} value={title} onChange={handleTitleChange} />
+            </div>
+            <div className={styles.descriptionField}>
+              <label htmlFor="description">Description</label>
+              <textarea id="description" className={styles.textAreaField} value={description} onChange={handleDescriptionChange} />
+            </div>
+          </div>
+          <div className={styles.formRow}>
+            <label htmlFor="image">Image</label>
+            <input type="file" id="image" accept="image/*" onChange={handleImageChange} />
+          </div>
+          <button type="submit" className={styles.createBlogButton}>Create Blog Post</button>
+        </form>
+      </Modal>
     </div>
   );
-}
+};
+
+export default Blogpage;

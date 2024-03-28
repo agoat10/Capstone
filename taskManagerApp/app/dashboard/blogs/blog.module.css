@@ -1,258 +1,267 @@
-.container {
-  width: 100%;
-  background-color: var(--bg);
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 20px;
+.modalBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
 }
 
-.heading {
-  font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 20px;
-}
-.blogframe {
-  display: grid;
-  padding: 5px;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 20px;
-}
-
-@media (min-width: 1024px) {
-  .blogframe {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 50px;
+  max-width: 600px;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
-.blogeditor__container {
-  padding: 20px; /* 1.25rem */
-  margin-top: 24px; /* 1.5rem */
-  margin-bottom: 24px; /* 1.5rem */
-  border-radius: 8px; /* 0.5rem */
-  width: 100%;
-  background-color: #f3f9fd;
-  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.1),
-    0 16px 32px 0 rgba(0, 0, 0, 0.06);
-}
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .blogeditor__container {
-    padding: 15px;
-  }
-  
-  .bloginput input, .bdes textarea, .quill {
-    font-size: 12px; /* Slightly smaller font size on smaller screens */
-  }
+.blogContent {
+  display: flex;
+  align-items: center;
 }
 
-.blogh2 {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.blogtitlecontainer {
-  padding-bottom: 8px;
-  margin-bottom: 10px;
-  border-bottom-width: 1px;
-}
-
-.bloglabel {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #555;
-}
-
-.inputtitle {
-  display: block;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border-width: 0;
-  width: 100%;
-  color: #111827;
-  font-size: 16px;
-  box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.05);
-}
-
-.bloginput input, .bdes textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box; /* Prevents the input from exceeding the container width */
-  margin-bottom: 20px;
-}
-
-.sluglabel {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #555;
-}
-
-.sluginput {
-  font-size: 16px;
-  box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.05);
-}
-
-.bdes {
-  margin-top: 8px;
-}
-
-.description {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  color: #272727;
-}
-
-.descriptioncontent {
-  font-family: '__Inter_aaf875', '__Inter_Fallback_aaf875';
-  font-size: 16px;
-  line-height: 1.5;
-  resize: vertical; /* Allows the user to resize the textarea vertically */
-}
-
-.content {
-  margin-top: 20px;
-}
-
-.bcontentlabel {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #0c2866;
-}
-
-.quill::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.btn {
-  background-color: #1f4cac;
-  color: #fff;
-  padding: 10px 15px;
+.addBlogButton, .createBlogButton {
+  background-color: #007bff;
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px; /* Space between icon and text */
-  transition: background-color 0.3s;
-}
-
-.btn:hover {
-  background-color: #ff5582;
-}
-
-.plus {
-  fill: currentColor; 
-}
-
-/* views */
-.view__container {
-  padding: 20px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  border-radius: 8px;
-  width: 100%;
-  background-color: #f9f9f9;
-  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.1),
-              0 16px 32px 0 rgba(0, 0, 0, 0.06);
-}
-.blogpreviewheader{
-  border-bottom: 2px solid #cccccc; /* Adjust the color (#cccccc) to the shade of gray you want */
-  padding-bottom: 10px; /* Gives some space between the text and the line */
-  margin-bottom: 20px; /* Additional space below the line if needed */
-}
-
-.break{
-margin-bottom: 10px;
-}
-
-.views {
-  margin-bottom: 10px;
-}
-.viewtitleh2{
-  font-size: 16px;
-}
-.viewh2{
-  font-size: 14px;
-  font-weight: 300;
-  font-style: italic;
-  margin-bottom: 5px;
-  
-
-}
-
-.viewbtitlecontent_t{
-  font-size: larger;
-  font-weight: bold;
-}
-
-/* Remove borders and backgrounds to emulate a posted blog look */
-.viewsmobile, .slug, .viewdes, .viewcontent {
-  background-color: transparent; /* No background */
-  padding: 5px; /* No padding inside each content area */
-  margin-bottom: 0; /* No space between content areas */
-  border: none; /* No border around content areas */
-}
-
-/* Optional: You might want to add some bottom margin to each section for spacing */
-.viewsmobile, .slug, .viewdes {
   margin-bottom: 20px;
+  display: block; 
+  margin-left: auto; 
+  margin-right: 20px;
 }
 
-/* Maintain the background for content area if needed */
-.viewbcontent {
-  padding: 15px;
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px;
+  max-width: 80%;
 }
 
-/* Styles for description to match the blog view */
-.viewdescontent {
-  background-color: transparent; /* No background color */
-  padding: 0; /* No padding */
-  word-wrap: break-word;
-  overflow: hidden;
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 999;
 }
 
-/* Responsive image styles within the blog content area */
-.viewbcontent img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
+.closeButton {
+  background: #ff5a5f; 
+  color: white;
+  border: none;
+  font-weight: bold;
+  position: absolute;
+  top: 10px; 
+  right: 10px;
+  width: 30px; 
+  height: 30px;
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  cursor: pointer;
 }
 
-/* Rest styles are still required to prevent overflow */
-.viewbcontent *,
-.viewbcontent *:before,
-.viewbcontent *:after {
-  margin: 0;
-  padding: 0;
+.inputField,
+.textAreaField,
+.quillEditor {
+  margin-bottom: 20px; 
+}
+
+.createBlogButton {
+  margin-top: 16px; 
+  align-self: center; 
+}
+
+.blogPost {
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 0;
+  line-height: 1.6; 
+  color: #333; 
+}
+
+.titleField,
+.descriptionField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.titleField label,
+.descriptionField label {
+  margin-bottom: 5px;
+}
+
+.titleField input,
+.descriptionField textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   box-sizing: border-box;
+  margin-top: 5px;
 }
 
-/* Styles for lists and paragraphs */
-.viewbcontent ul,
-.viewbcontent ol,
-.viewbcontent p {
-  margin-left: 20px;
-  margin-bottom: 10px;
+.titleField input {
+  height: 40px; 
 }
 
-@media (min-width: 640px) {
-  .views {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-  .viewsmobile, .slug, .viewdes, .viewcontent {
-    grid-column: span 2 / span 2;
-  }
+.searchInput {
+margin-top: 50px;
+align-self: center;
+background-color: #f9f9f9;
+color:#333;
+border: none;
+border-radius: 5px;
+padding: 10px 15px;
+font-size: 16px;
+cursor: text;
+
+
+
 }
+
+.createBlogButton {
+  margin-top: 16px; 
+  align-self: center; 
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%; 
+}
+
+.blogPageContainer {
+  padding: 20px; 
+}
+
+.blogsDisplay {
+  margin-top: 20px; 
+}
+
+.featuredPostContainer {
+  flex: 1; 
+  max-width: 300px; 
+  margin-right: 20px; 
+}
+
+.featuredImage {
+  width: 100%; 
+  height: auto; 
+  object-fit: contain; 
+}
+
+
+.postDetails {
+  flex: 1;
+}
+
+.postTitle {
+  margin: 0;
+  color: #333; 
+  font-size: 24px;
+}
+
+.postSummary {
+  font-size: 16px;
+  color: #666; 
+}
+
+.postMeta {
+  font-size: 14px;
+  color: #999; 
+  margin-top: 12px;
+}
+
+.blogPostImage, .featuredImage {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blogPostImage {
+  max-width: 100%; 
+  max-height: 120px; 
+  object-fit: contain; 
+  width: auto; 
+  height: auto; 
+  margin-right: 20px; 
+}
+
+
+.blogDescription{
+  flex: 1;
+}
+
+
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 20px;
+}
+
+.featuredPostContainer {
+  flex: 3; 
+  margin-right: 20px;
+}
+
+.previousStories {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+}
+.featuredImage {
+  width: 80%; 
+  height: auto; 
+  object-fit: cover; 
+  margin: 0 auto; 
+}
+.editButton, .deleteButton {
+  padding: 8px 16px;
+  margin-top: 20px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.editButton {
+  background-color: #007bff; 
+}
+
+.deleteButton {
+  background-color: #dc3545; 
+}
+
